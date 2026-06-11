@@ -34,6 +34,7 @@ def brainfuck(code):
     memory = memoryRegister()
     pointer = 0
     loopBeginnings = []
+    index = 0
     while index < len(code):
         char = code[index]
         if char == ">" or char == "<":
