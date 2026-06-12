@@ -62,17 +62,17 @@ def brainfuck(code):
         elif char == "@":
             token += chr(memory[pointer])
         elif char == "^":
-            for responseChar in requests.post(urlToSend, json=ast.literal_eval(payloadToSend), headers={
-                "Authorization": f"Bot {token}",
-                "Content-Type": "application/json"
-            }):
-                output.append(responseChar)
+            print(f"DEBUG url={urlToSend!r} payload={payloadToSend!r} token={token!r}")
+            response = requests.post(urlToSend, json=ast.literal_eval(payloadToSend), headers={"Authorization": f"Bot {token}", "Content-Type": "application/json"})
+            for responseChar in response.text:
+                output.append(ord(responseChar))
+                print(responseChar, end="")
             payloadToSend = ""
             urlToSend = ""
         elif char == "[":
             loopBeginnings.append([index, pointer])
         elif char == "]":
-            if memory[loopBeginnings[-1][1]] > 0:
+            if memory[pointer]:
                 index = loopBeginnings[-1][0]
             else:
                 loopBeginnings.pop(-1)
