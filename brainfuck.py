@@ -45,7 +45,7 @@ def brainfuck(code):
                 memory[pointer] = 255
             memory[pointer] = memory[pointer] % 256
         elif char == ".":
-            print(chr(memory[pointer]))
+            print(chr(memory[pointer]), end="")
         elif char == ",":
             memory[pointer] = ord(input())
         elif char == "[":
