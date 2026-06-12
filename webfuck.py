@@ -1,5 +1,5 @@
 import requests
-import ast
+import json
 class BrainfuckError(Exception):
     pass
 class memoryRegister:
@@ -69,7 +69,7 @@ def brainfuck(code):
             token += chr(memory[pointer])
         elif char == "^":
             print(f"DEBUG url={urlToSend!r} payload={payloadToSend!r} token={token!r}")
-            response = requests.post(urlToSend, json=ast.literal_eval(payloadToSend), headers={"Authorization": f"Bot {token}", "Content-Type": "application/json"})
+            response = requests.post(urlToSend, json=json.loads(payloadToSend), headers={"Authorization": f"Bot {token}", "Content-Type": "application/json"})
             for responseChar in response.text:
                 output.append(ord(responseChar))
                 print(responseChar, end="")
