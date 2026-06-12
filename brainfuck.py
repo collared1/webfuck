@@ -40,6 +40,7 @@ def brainfuck(code):
     output = []
     urlToSend = ""
     payloadToSend = ""
+    token = ""
     while index < len(code):
         char = code[index]
         if char == ">" or char == "<":
@@ -52,15 +53,22 @@ def brainfuck(code):
         elif char == ".":
             print(chr(memory[pointer]), end="")
         elif char == ",":
-            memory[pointer] = output[0]
-            output.pop(0)
+            memory[pointer] = output[0] if output[0] else memory[pointer]
+            output.pop(0) if output[0] else None
         elif char == "?":
             urlToSend += chr(memory[pointer])
         elif char == "$":
             payloadToSend += chr(memory[pointer])
+        elif char == "@":
+            token += chr(memory[pointer])
         elif char == "^":
-            for responseChar in requests.post(urlToSend, json=ast.literal_eval(payloadToSend)):
+            for responseChar in requests.post(urlToSend, json=ast.literal_eval(payloadToSend), headers={
+                "Authorization": f"Bot {token}",
+                "Content-Type": "application/json"
+            }):
                 output.append(responseChar)
+            payloadToSend = ""
+            urlToSend = ""
         elif char == "[":
             loopBeginnings.append([index, pointer])
         elif char == "]":
