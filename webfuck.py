@@ -1,5 +1,7 @@
 import requests
 import ast
+class BrainfuckError(Exception):
+    pass
 class memoryRegister:
     def __init__(self):
         self._pos = []
@@ -36,11 +38,14 @@ def brainfuck(code):
     memory = memoryRegister()
     pointer = 0
     loopBeginnings = []
+    loopEndings = []
     index = 0
     output = []
     urlToSend = ""
     payloadToSend = ""
     token = ""
+    functions = []
+    recentIndices = []
     while index < len(code):
         char = code[index]
         if char == ">" or char == "<":
@@ -53,8 +58,9 @@ def brainfuck(code):
         elif char == ".":
             print(chr(memory[pointer]), end="")
         elif char == ",":
-            memory[pointer] = output[0] if output[0] else memory[pointer]
-            output.pop(0) if output[0] else None
+            if output:
+                memory[pointer] = output[0]
+                output.pop(0)
         elif char == "?":
             urlToSend += chr(memory[pointer])
         elif char == "$":
@@ -69,11 +75,32 @@ def brainfuck(code):
                 print(responseChar, end="")
             payloadToSend = ""
             urlToSend = ""
+            token = ""
         elif char == "[":
-            loopBeginnings.append([index, pointer])
+            if not index in loopBeginnings:
+                loopBeginnings.append(index)
         elif char == "]":
+            if not index in loopEndings:
+                loopEndings.append(index)
+            if not len(loopBeginnings) >= len(loopEndings):
+                raise BrainfuckError("Unmatched ] at index " + str(index))
             if memory[pointer]:
-                index = loopBeginnings[-1][0]
+                index = loopBeginnings[-1]
             else:
                 loopBeginnings.pop(-1)
+        elif char == "{":
+            if not any(index in sublist for sublist in functions):
+                functions.append([index])
+        elif char == "}":
+            if not any(index in sublist for sublist in functions):
+                functions[-1].append(index)
+            else:
+                index = recentIndices[-1]
+                recentIndices.pop(-1)
+        elif char == "!":
+            recentIndices.append(index)
+            if memory[pointer] >= len(functions):
+                raise BrainfuckError("You cannot call a function without said function being defined.")
+            else:
+                index = functions[memory[pointer]][0]
         index += 1
