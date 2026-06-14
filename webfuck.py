@@ -34,7 +34,7 @@ class memoryRegister:
         return f"memoryRegister(... {neg_part} | {self._pos} ...)"
 
 
-def brainfuck(code):
+def webfuck(code):
     memory = memoryRegister()
     pointer = 0
     loopBeginnings = []
