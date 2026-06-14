@@ -45,8 +45,13 @@ def webfuck(code):
     token = ""
     functions = []
     recentIndices = []
+    recentPointers = []
+    inFunction = False
     while index < len(code):
         char = code[index]
+        if inFunction:
+            index += 1
+            continue
         if char == ">" or char == "<":
             pointer += 1 if char == ">" else -1
         elif char == "+" or char == "-":
@@ -86,9 +91,13 @@ def webfuck(code):
         elif char == "{":
             if not any(index in sublist for sublist in functions):
                 functions.append([index])
+                inFunction = True
+            else:
+                recentPointers.append(pointer)
         elif char == "}":
             if not any(index in sublist for sublist in functions):
                 functions[-1].append(index)
+                inFunction = False
             else:
                 index = recentIndices[-1]
                 recentIndices.pop(-1)
@@ -100,6 +109,9 @@ def webfuck(code):
                 index = functions[memory[pointer]][0]
         elif char == "&":
             memory[pointer] = len(output)
+        elif char == "*":
+            pointer = recentPointers[-1]
+            recentPointers.pop(-1)
         index += 1
 
 def generateTestWebfuck(url, payload):
