@@ -98,6 +98,8 @@ def webfuck(code):
                 raise WebfuckError("You cannot call a function without said function being defined.")
             else:
                 index = functions[memory[pointer]][0]
+        elif char == "&":
+            memory[pointer] = len(output)
         index += 1
 
 def generateTestWebfuck(url, payload):
