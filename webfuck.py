@@ -1,5 +1,6 @@
 import requests
 import json
+import time
 class WebfuckError(Exception):
     pass
 class memoryRegister:
@@ -112,6 +113,12 @@ def webfuck(code):
         elif char == "*":
             pointer = recentPointers[-1]
             recentPointers.pop(-1)
+        elif char == "~":
+            originalLength = len(output)
+            while True:
+                time.sleep(0.1)
+                if len(output) > originalLength:
+                    break
         index += 1
 
 def generateTestWebfuck(url, payload):
