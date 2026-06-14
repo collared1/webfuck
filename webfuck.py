@@ -1,6 +1,6 @@
 import requests
 import json
-class BrainfuckError(Exception):
+class WebfuckError(Exception):
     pass
 class memoryRegister:
     def __init__(self):
@@ -38,7 +38,6 @@ def brainfuck(code):
     memory = memoryRegister()
     pointer = 0
     loopBeginnings = []
-    loopEndings = []
     index = 0
     output = []
     urlToSend = ""
@@ -80,10 +79,6 @@ def brainfuck(code):
             if not index in loopBeginnings:
                 loopBeginnings.append(index)
         elif char == "]":
-            if not index in loopEndings:
-                loopEndings.append(index)
-            if not len(loopBeginnings) >= len(loopEndings):
-                raise BrainfuckError("Unmatched ] at index " + str(index))
             if memory[pointer]:
                 index = loopBeginnings[-1]
             else:
@@ -100,7 +95,7 @@ def brainfuck(code):
         elif char == "!":
             recentIndices.append(index)
             if memory[pointer] >= len(functions):
-                raise BrainfuckError("You cannot call a function without said function being defined.")
+                raise WebfuckError("You cannot call a function without said function being defined.")
             else:
                 index = functions[memory[pointer]][0]
         index += 1
