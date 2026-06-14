@@ -99,3 +99,17 @@ def webfuck(code):
             else:
                 index = functions[memory[pointer]][0]
         index += 1
+
+def generateTestWebfuck(url, payload):
+    webfuck = ""
+    for char in url:
+        webfuck += "[-] "
+        for i in range(ord(char)):
+            webfuck += "+"
+        webfuck += " ?\n"
+    for char in payload:
+        webfuck += "[-] "
+        for i in range(ord(char)):
+            webfuck += "+"
+        webfuck += " $\n"
+    print(webfuck)
