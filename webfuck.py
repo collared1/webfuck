@@ -43,7 +43,7 @@ def webfuck(code):
     output = []
     urlToSend = ""
     payloadToSend = ""
-    token = ""
+    headers = ""
     functions = []
     recentIndices = []
     recentPointers = []
@@ -71,10 +71,10 @@ def webfuck(code):
         elif char == "$":
             payloadToSend += chr(memory[pointer])
         elif char == "@":
-            token += chr(memory[pointer])
+            headers += chr(memory[pointer])
         elif char == "^":
             print(f"DEBUG url={urlToSend!r} payload={payloadToSend!r} token={token!r}")
-            response = requests.post(urlToSend, json=json.loads(payloadToSend), headers={"Authorization": f"Bot {token}", "Content-Type": "application/json"})
+            response = requests.post(urlToSend, json=json.loads(payloadToSend), headers=headers)
             for responseChar in response.text:
                 output.append(ord(responseChar))
                 print(responseChar, end="")
