@@ -112,4 +112,6 @@ def generateTestWebfuck(url, payload):
         for i in range(ord(char)):
             webfuck += "+"
         webfuck += " $\n"
+
+    webfuck += "^"
     print(webfuck)
